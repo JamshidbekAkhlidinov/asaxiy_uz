@@ -22,7 +22,21 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions' => function ($model, $index, $widget, $grid){
+            if($model->status_id == 1){
+              return ['class' => 'primary'];
+            } elseif($model->status_id == 2){
+                return ['class' => 'warning'];
+            } elseif($model->status_id == 3){
+                return ['class' => 'success'];
+            } elseif($model->status_id == 4){
+                return ['class' => 'danger'];
+            }
+            
+        },
+        
         'columns' => [
+
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
@@ -43,7 +57,12 @@ $this->params['breadcrumbs'][] = $this->title;
             //'hired',
             [
                 'class' => ActionColumn::className(),
-                // 'template'=>'{view} {delete}',
+                'template'=>'{view} {delete} {update} {reply}',
+                'buttons'=>[
+                    'reply'=>function($url,$model,$key){
+                        return Html::a('<i class="fa fa-fw fa-mail-reply-all"></i> ',['notes/create','id'=>$model->id]);
+                    }
+                ],
                 'urlCreator' => function ($action, Members $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
